@@ -1,10 +1,14 @@
 package io.github.openunirest.http;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Type;
 
 public class JacksonObjectMapper implements ObjectMapper {
 
@@ -37,4 +41,13 @@ public class JacksonObjectMapper implements ObjectMapper {
             throw new RuntimeException(e);
         }
     }
+
+	@Override
+	public <T> T readValue(String rawBody, Object type) {
+		try {
+			return om.readValue(rawBody, (TypeReference<T>)type);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
 }
